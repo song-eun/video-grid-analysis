@@ -1,0 +1,60 @@
+html,
+body,
+#cy {
+  width: 100%;
+  height: 100%;
+}
+
+input {
+  padding: 5px;
+}
+
+#y,
+#x {
+  display: none;
+}
+
+.tippy-popper {
+  transition: none !important;
+}
+
+.cc-selector input{
+  margin: 0px;
+  padding: 0px;
+  -webkit-appearance:none;
+     -moz-appearance:none;
+          appearance:none;
+}
+
+.vid1{background-image:url(/image/2e5d1e29-272a-3606-a480-183f0a69037d.PNG);}
+.vid2{background-image:url(/image/5ee49c57-c438-382c-a4cc-d54ba988bc3c.PNG);}
+.vid3{background-image:url(/image/1d792fad-b0af-382e-8de9-d9310bad68bf_out_.PNG);}
+
+.drinkcard-cc{
+  cursor:pointer;
+  background-size:contain;
+  background-repeat:no-repeat;
+  display:inline-block;
+  height:190px;
+  width:337px;
+  -webkit-transition: all 100ms ease-in;
+     -moz-transition: all 100ms ease-in;
+          transition: all 100ms ease-in;
+}
+
+.drinkcard-cc:hover{
+  -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+     -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+          filter: brightness(1.2) grayscale(.5) opacity(.9);
+}
+
+[type=radio] { 
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+[type=radio]:checked + label  {
+  outline: 4px solid #6d95ec ;
+}

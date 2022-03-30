@@ -1,0 +1,31 @@
+{
+  "name": "traffic",
+  "version": "1.0.0",
+  "description": "car tracking web",
+  "main": "index.js",
+  "scripts": {
+    "start": "babel-node app.js"
+  },
+  "author": "SongEunJae",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.16.10",
+    "@babel/preset-env": "^7.16.10",
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "@babel/node": "^7.16.8",
+    "async": "^3.2.3",
+    "cookie-parser": "^1.4.6",
+    "csv-parse": "^5.0.4",
+    "csv-parser": "^3.0.0",
+    "cytoscape": "^3.21.0",
+    "cytoscape-popper": "^2.0.0",
+    "cytoscape-qtip": "^2.8.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.4",
+    "serve-favicon": "^2.5.0"
+  }
+}
