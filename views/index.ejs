@@ -14,7 +14,7 @@
   <form action="/form" method="POST">
     <h3>Video</h3>
     <div class="cc-selector">
-      <input id="vid1" type="radio" name="vid" value="2e5d1e29-272a-3606-a480-183f0a69037d" />
+      <input required id="vid1" type="radio" name="vid" value="2e5d1e29-272a-3606-a480-183f0a69037d" />
       <label class="drinkcard-cc vid1" for="vid1"></label>
       <input id="vid2" type="radio" name="vid" value="5ee49c57-c438-382c-a4cc-d54ba988bc3c" />
       <label class="drinkcard-cc vid2"for="vid2"></label>
@@ -22,8 +22,8 @@
       <label class="drinkcard-cc vid3"for="vid3"></label>
     </div>
     <h3>Grid</h3>
-    <input type="text" name="gridx" autocomplete="off"/>
-    <input type="text" name="gridy" autocomplete="off"/>
+    <input required ype="text" name="gridx" autocomplete="off"/>
+    <input required type="text" name="gridy" autocomplete="off"/>
     <button type="submit">submit</button>
   </form>
 </body>

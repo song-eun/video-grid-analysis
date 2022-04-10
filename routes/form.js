@@ -1,6 +1,7 @@
 var express = require("express");
 const fs = require("fs");
 const parse = require("csv-parse");
+const { json } = require("express/lib/response");
 var router = express.Router();
 
 function makeDataForm(x,y) {
@@ -60,6 +61,7 @@ function makeDataForm(x,y) {
     jsonObj.x2 = x2_list[i];
     jsonObj.y1 = y1_list[i];
     jsonObj.y2 = y2_list[i];
+    jsonObj.frameid = [];
 
     jsonObj = JSON.stringify(jsonObj);
     data_form.push(JSON.parse(jsonObj));
@@ -104,55 +106,89 @@ router.post("/", function (req, res) {
       let person_list = [];
       let car_list = [];
 
+      let person_x = [];
+      let person_y = [];
+      let car_x = [];
+      let car_y = [];
+
+      let fcar_list = [];
+      let fperson_list = [];
+      //person x, person y 리스트 만들고 car도 똑같이 만든다.
+
+      //fcar리스트의 length는 x나 y랑 같음
+      //해당 되는 index json에 넣음
+
       for (let i = 1; i < lines.length; i++) {
-        if(lines[i]["itraj"]){
+          let frameId = lines[i]["frame_id"];
+          let frame_str = frameId.replaceAll("[", "");
+          frame_str = frame_str.replaceAll("]", "");
+          frame_str = frame_str.split(", ").map(function (i) {
+            return parseInt(i, 10);
+          });
+
           let itraj = lines[i]["itraj"];
           let str = itraj.replaceAll("[", "");
           str = str.replaceAll("]", "");
           str = str.split(", ").map(function (i) {
             return parseInt(i, 10);
           });
+
           if (lines[i]["class_name"] == "person") {
+            let list_x = [];
+            let list_y = [];
+            for(let j = 0; j < str.length; j++){
+              if(j % 2 == 0) {
+                list_x.push(str[j]);
+              }
+              else {
+                list_y.push(str[j]);
+              }
+            }
+            person_x.push(list_x);
+            person_y.push(list_y);
             person_list.push(str);
+            fperson_list.push(frame_str);
           } else {
+            let list_x = [];
+            let list_y = [];
+            for(let j = 0; j < str.length; j++){
+              if(j % 2 == 0) {
+                list_x.push(str[j]);
+              }
+              else {
+                list_y.push(str[j]);
+              }
+            }
+            car_x.push(list_x);
+            car_y.push(list_y);
             car_list.push(str);
+            fcar_list.push(frame_str);
           }
-        }
-        else {
-          let x = lines[i]["x"];
-          let y = lines[i]["y"];
-          let x_y = [];
-          x = parseInt(x);
-          y = parseInt(y);
-          x_y.push(x);
-          x_y.push(y);
-          if (lines[i]["object_class"] == "person") {
-            person_list.push(x_y);
-          } else if(lines[i]["object_class"] == "car"){
-            car_list.push(x_y);
-          }
-        }
       }
       
       let cnt = 0;
-
       let car_count = [];
       let person_count = [];
       var fps = 15;
 
       for (let i = 0; i < car_data.length; i++) {
+        let car_id_frame = [];
         cnt = 0;
-        for (let j = 0; j < car_list.length; j++) {
-          for (let k = 0; k < car_list[j].length; k++) {
+        for (let j = 0; j < car_x.length; j++) {
+          car_id_frame = [];
+          for (let k = 0; k < car_x[j].length; k++) {
             if (
-              car_list[j][k] >= car_data[i].x1 &&
-              car_list[j][k] <= car_data[i].x2 &&
-              car_list[j][k + 1] >= car_data[i].y1 &&
-              car_list[j][k + 1] <= car_data[i].y2
+              car_x[j][k] >= car_data[i].x1 &&
+              car_x[j][k] <= car_data[i].x2 &&
+              car_y[j][k] >= car_data[i].y1 &&
+              car_y[j][k] <= car_data[i].y2
             ) {
               cnt = cnt + 1 / fps;
+              car_id_frame.push(fcar_list[j][k]);
             }
-            k++;
+          }
+          if(car_id_frame.length != 0) {
+            car_data[i].frameid.push(car_id_frame);
           }
         }
         cnt = Math.round(cnt * 100) / 100;
@@ -160,18 +196,23 @@ router.post("/", function (req, res) {
       }
 
       for (let i = 0; i < person_data.length; i++) {
+        let person_id_frame = [];
         cnt = 0;
         for (let j = 0; j < person_list.length; j++) {
+          person_id_frame = [];
           for (let k = 0; k < person_list[j].length; k++) {
             if (
-              person_list[j][k] >= person_data[i].x1 &&
-              person_list[j][k] <= person_data[i].x2 &&
-              person_list[j][k + 1] >= person_data[i].y1 &&
-              person_list[j][k + 1] <= person_data[i].y2
+              person_x[j][k] >= person_data[i].x1 &&
+              person_x[j][k] <= person_data[i].x2 &&
+              person_y[j][k] >= person_data[i].y1 &&
+              person_y[j][k] <= person_data[i].y2
             ) {
               cnt = cnt + 1 / fps;
+              person_id_frame.push(fperson_list[j][k]);
             }
-            k++;
+          }
+          if(person_id_frame != 0) {
+            person_data[i].frameid.push(person_id_frame);
           }
         }
         cnt = Math.round(cnt * 100) / 100;
