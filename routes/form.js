@@ -166,12 +166,19 @@ router.post("/", function (req, res) {
           }
       }
       
+      //console.log(person_x[0]);
+      //console.log(car_x[1]);
+      //console.log(person_list[0]);
+      //console.log(car_list[1]);
+
       let cnt = 0;
+      let data_car_frame = [];
       let car_count = [];
       let person_count = [];
       var fps = 15;
 
       for (let i = 0; i < car_data.length; i++) {
+        let frame_row = [];
         let car_id_frame = [];
         cnt = 0;
         for (let j = 0; j < car_x.length; j++) {
@@ -187,15 +194,21 @@ router.post("/", function (req, res) {
               car_id_frame.push(fcar_list[j][k]);
             }
           }
-          if(car_id_frame.length != 0) {
-            car_data[i].frameid.push(car_id_frame);
-          }
+            if(car_id_frame.length != 0){
+              frame_row.push(car_id_frame);
+            }
         }
         cnt = Math.round(cnt * 100) / 100;
         car_count.push(cnt);
+        //if(frame_row.length != 0) {
+          data_car_frame.push(frame_row);
+        //}
       }
 
+      let data_person_frame = [];
+
       for (let i = 0; i < person_data.length; i++) {
+        let frame_row = [];
         let person_id_frame = [];
         cnt = 0;
         for (let j = 0; j < person_list.length; j++) {
@@ -211,13 +224,18 @@ router.post("/", function (req, res) {
               person_id_frame.push(fperson_list[j][k]);
             }
           }
-          if(person_id_frame != 0) {
-            person_data[i].frameid.push(person_id_frame);
+          if(person_id_frame.length != 0){
+            frame_row.push(person_id_frame);
           }
         }
         cnt = Math.round(cnt * 100) / 100;
         person_count.push(cnt);
+        //if(frame_row.length !== 0) {
+          data_person_frame.push(frame_row);
+        //}
       }
+      console.log(car_data.length);
+      console.log(data_car_frame.length);
 
       for (let i = 0; i < car_count.length; i++) {
         let opacity = 0;
@@ -227,6 +245,7 @@ router.post("/", function (req, res) {
           id: i + 1,
           weight: car_count[i],
           opacity: opacity,
+          frameid: data_car_frame[i]
         };
       }
 
@@ -238,6 +257,7 @@ router.post("/", function (req, res) {
           id: i + 1,
           weight: person_count[i],
           opacity: opacity,
+          frameid: data_person_frame[i]
         };
       }
 
