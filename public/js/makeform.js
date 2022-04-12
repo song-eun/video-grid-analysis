@@ -17,14 +17,14 @@ function playVideoTeaserFrom (startTime, endTime) {
 }
 
 function showPopup(frame_list) {
-  const ul = document.querySelector('#frame-list');
-  for(let i=0; i<frame_list.length; i++) {
-    let li = document.createElement("li");
-    const span = document.createElement("span");
-    span.innerText = i+1;
-    li.appendChild(span);
-    ul.appendChild(li);
-  }
+  // const ul = document.querySelector('#frame-list');
+  // for(let i=0; i<frame_list.length; i++) {
+  //   let li = document.createElement("li");
+  //   const span = document.createElement("span");
+  //   span.innerText = i+1;
+  //   li.appendChild(span);
+  //   ul.appendChild(li);
+  // }
 
   let startTime = frame2time(frame_list[frame_list.length-1][0]);
   let endTime = frame2time(frame_list[frame_list.length-1][frame_list[frame_list.length-1].length-1]);
@@ -67,11 +67,11 @@ dataset.addEventListener("change", (event) => {
           {
             selector: "node",
             style: {
-              width: (window.innerWidth / x.innerText) * 10,
+              //width: (window.innerWidth / x.innerText) * 10,
 
-              height: (window.innerHeight / y.innerText) * 10,
+              //height: (window.innerHeight / y.innerText) * 10,
 
-              shape: "square",
+              //shape: "square",
               "background-color": "#666",
               "background-opacity": "data(opacity)",
             },
