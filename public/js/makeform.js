@@ -67,11 +67,11 @@ dataset.addEventListener("change", (event) => {
           {
             selector: "node",
             style: {
-              //width: (window.innerWidth / x.innerText) * 10,
+              width: (window.innerWidth / x.innerText) * 10,
 
-              //height: (window.innerHeight / y.innerText) * 10,
+              height: (window.innerHeight / y.innerText) * 10,
 
-              //shape: "square",
+              shape: "square",
               "background-color": "#666",
               "background-opacity": "data(opacity)",
             },
