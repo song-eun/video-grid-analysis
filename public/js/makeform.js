@@ -71,11 +71,11 @@ dataset.addEventListener("change", (event) => {
               height: (window.innerHeight / y.innerText) * 10,
 
               shape: "square",
-              // "background-color": "#666",
-              "background-color": function( ele ){ 
-                if( ele.data('weight') > 40) return "red"; //if edge weight is more than 2, return color red;
-                else if( ele.data('weight') > 10) return "blue";
-              },
+              "background-color": "#666",
+              // "background-color": function( ele ){ 
+              //   if( ele.data('weight') > 40) return "red"; //if edge weight is more than 2, return color red;
+              //   else if( ele.data('weight') > 10) return "blue";
+              // },
               "background-opacity": "data(opacity)",
             },
           },
@@ -107,6 +107,12 @@ dataset.addEventListener("change", (event) => {
           makePopper(ele, weight);
         });
       });
+
+      var nodes = cy.nodes().sort(function(a,b){
+        return a.data('node_weight') - b.data('node_weight');
+      });
+      var nodeSlc = nodes.slice(8999,9999);
+      nodeSlc.style('background-color', '#E84855').update();
 
       cy.elements().unbind("mouseover");
       cy.elements().bind("mouseover", (event) => event.target.tippy.show());

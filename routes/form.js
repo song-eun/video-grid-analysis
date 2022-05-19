@@ -51,7 +51,7 @@ function makeDataForm(x,y) {
 
   for (let i = 0; i < x * y; i++) {
     var jsonObj = new Object();
-    var jsonData = { id: i + 1, weight: 0 };
+    var jsonData = { id: i + 1, node_weight: 0 };
     jsonObj.group = "nodes";
     jsonObj.data = jsonData;
 
@@ -142,15 +142,22 @@ router.post("/", function (req, res) {
             return parseFloat(i);
           });
 
+          console.log(str.length);
+          console.log(str);
+          console.log(score_str);
+          console.log(score_str.length);
+
           if (lines[i]["class_name"] == "person") {
             let list_x = [];
             let list_y = [];
             for(let j = 0; j < str.length; j++){
-              if(j % 2 == 0) {
-                list_x.push(str[j]);
-              }
-              else {
-                list_y.push(str[j]);
+              if(score_str[Math.floor(j/2)]>0.7){
+                if(j % 2 == 0) {
+                  list_x.push(str[j]);
+                }
+                else {
+                  list_y.push(str[j]);
+                }
               }
             }
             person_x.push(list_x);
@@ -194,21 +201,19 @@ router.post("/", function (req, res) {
         cnt = 0;
         for (let j = 0; j < car_x.length; j++) {
           car_id_frame = [];
-          if(car_score[j] > 0.5) {
-            for (let k = 0; k < car_x[j].length; k++) {
-              if (
-                car_x[j][k] >= car_data[i].x1 &&
-                car_x[j][k] <= car_data[i].x2 &&
-                car_y[j][k] >= car_data[i].y1 &&
-                car_y[j][k] <= car_data[i].y2
-              ) {
-                cnt = cnt + 1 / fps;
-                car_id_frame.push(fcar_list[j][k]);
-              }
+          for (let k = 0; k < car_x[j].length; k++) {
+            if (
+              car_x[j][k] >= car_data[i].x1 &&
+              car_x[j][k] <= car_data[i].x2 &&
+              car_y[j][k] >= car_data[i].y1 &&
+              car_y[j][k] <= car_data[i].y2
+            ) {
+              cnt = cnt + 1 / fps;
+              car_id_frame.push(fcar_list[j][k]);
             }
+          }
             if(car_id_frame.length != 0){
               frame_row.push(car_id_frame);
-            }
           }
         }
         cnt = Math.round(cnt * 100) / 100;
@@ -257,7 +262,7 @@ router.post("/", function (req, res) {
         else opacity = car_count[i];
         car_data[i].data = {
           id: i + 1,
-          weight: car_count[i],
+          node_weight: car_count[i],
           opacity: opacity,
           frameid: data_car_frame[i]
         };
@@ -269,7 +274,7 @@ router.post("/", function (req, res) {
         else opacity = person_count[i];
         person_data[i].data = {
           id: i + 1,
-          weight: person_count[i],
+          node_weight: person_count[i],
           opacity: opacity,
           frameid: data_person_frame[i]
         };
@@ -281,6 +286,8 @@ router.post("/", function (req, res) {
       fs.writeFileSync("./public/datasets/person.json", personJSON);
       fs.writeFileSync("./public/datasets/car.json", carJSON);
 
+
+      console.log(0.1<0.245);
       res.render("form", { x: x, y: y });
     });
 });
