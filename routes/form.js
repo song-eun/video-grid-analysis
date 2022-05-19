@@ -108,8 +108,10 @@ router.post("/", function (req, res) {
 
       let person_x = [];
       let person_y = [];
+      let person_score = [];
       let car_x = [];
       let car_y = [];
+      let car_score = [];
 
       let fcar_list = [];
       let fperson_list = [];
@@ -133,6 +135,13 @@ router.post("/", function (req, res) {
             return parseInt(i, 10);
           });
 
+          let score = lines[i]["score"];
+          let score_str = score.replaceAll("[", "");
+          score_str = score_str.replaceAll("]", "");
+          score_str = score_str.split(", ").map(function (i) {
+            return parseFloat(i);
+          });
+
           if (lines[i]["class_name"] == "person") {
             let list_x = [];
             let list_y = [];
@@ -147,6 +156,7 @@ router.post("/", function (req, res) {
             person_x.push(list_x);
             person_y.push(list_y);
             person_list.push(str);
+            person_score.push(score_str);
             fperson_list.push(frame_str);
           } else {
             let list_x = [];
@@ -162,6 +172,7 @@ router.post("/", function (req, res) {
             car_x.push(list_x);
             car_y.push(list_y);
             car_list.push(str);
+            car_score.push(score_str);
             fcar_list.push(frame_str);
           }
       }
@@ -183,20 +194,22 @@ router.post("/", function (req, res) {
         cnt = 0;
         for (let j = 0; j < car_x.length; j++) {
           car_id_frame = [];
-          for (let k = 0; k < car_x[j].length; k++) {
-            if (
-              car_x[j][k] >= car_data[i].x1 &&
-              car_x[j][k] <= car_data[i].x2 &&
-              car_y[j][k] >= car_data[i].y1 &&
-              car_y[j][k] <= car_data[i].y2
-            ) {
-              cnt = cnt + 1 / fps;
-              car_id_frame.push(fcar_list[j][k]);
+          if(car_score[j] > 0.5) {
+            for (let k = 0; k < car_x[j].length; k++) {
+              if (
+                car_x[j][k] >= car_data[i].x1 &&
+                car_x[j][k] <= car_data[i].x2 &&
+                car_y[j][k] >= car_data[i].y1 &&
+                car_y[j][k] <= car_data[i].y2
+              ) {
+                cnt = cnt + 1 / fps;
+                car_id_frame.push(fcar_list[j][k]);
+              }
             }
-          }
             if(car_id_frame.length != 0){
               frame_row.push(car_id_frame);
             }
+          }
         }
         cnt = Math.round(cnt * 100) / 100;
         car_count.push(cnt);

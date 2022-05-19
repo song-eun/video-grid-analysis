@@ -68,11 +68,14 @@ dataset.addEventListener("change", (event) => {
             selector: "node",
             style: {
               width: (window.innerWidth / x.innerText) * 10,
-
               height: (window.innerHeight / y.innerText) * 10,
 
               shape: "square",
-              "background-color": "#666",
+              // "background-color": "#666",
+              "background-color": function( ele ){ 
+                if( ele.data('weight') > 40) return "red"; //if edge weight is more than 2, return color red;
+                else if( ele.data('weight') > 10) return "blue";
+              },
               "background-opacity": "data(opacity)",
             },
           },
