@@ -103,16 +103,72 @@ dataset.addEventListener("change", (event) => {
 
       cy.ready(function () {
         cy.elements().forEach(function (ele) {
-          let weight = ele._private.data.weight;
+          let weight = ele._private.data.node_weight;
           makePopper(ele, weight);
         });
       });
 
+      //복사해서 하기
       var nodes = cy.nodes().sort(function(a,b){
         return a.data('node_weight') - b.data('node_weight');
       });
-      var nodeSlc = nodes.slice(8999,9999);
-      nodeSlc.style('background-color', '#E84855').update();
+      var maxWeight = nodes[nodes.length-1].data('node_weight');
+      // var nodeSlc = nodes.slice(8999,9999);
+      // nodeSlc.style('background-color', '#E84855');
+      
+      //표준편차구하기
+      //1.평균구하기
+      var avgWeight = 0;
+      for(var i = 0; i<nodes.length; i++) {
+        avgWeight += nodes[i].data('node_weight');        
+      }
+      avgWeight = Math.floor(avgWeight/nodes.length);
+      console.log("avgWeight: "+ avgWeight);
+      
+      //2.분산구하기
+      var avgList = [];
+      for(var i = 0; i<nodes.length; i++) {
+        var num = nodes[i].data('node_weight') - avgWeight;
+        avgList.push(Math.abs(num*num));
+      }
+      console.log("avgList: ");
+      console.log(avgList);
+
+      var sum = 0;
+      for(var i = 0; i<avgList.length; i++) {
+        sum += avgList[i]; 
+      }
+      console.log("sum: "+ sum);
+      var variance = Math.floor(sum/nodes.length-2);
+      console.log("variance: "+ variance);
+      var standardDeviation = Math.sqrt(variance)
+      console.log("standardDeviation: "+standardDeviation);
+
+      var whenZero = Math.abs((0 - avgWeight)/standardDeviation);
+      //z-score
+      var zScore = [];
+      for(var i = 0; i<nodes.length; i++) {
+        zScore.push(((nodes[i].data('node_weight') - avgWeight)/standardDeviation)+whenZero);
+      }
+      var zScoreMax = zScore[zScore.length-1];
+      for(var i = 0; i<nodes.length; i++) {
+        zScore[i] = zScore[i]/zScoreMax;
+      }
+      console.log("zScore: ");
+      console.log(zScore);
+
+      function heatMapColorforValue(value) {
+        var h = (1.0 - value) * 240;
+        // var h = (1.0 - value) * 100;
+        // var h = (1.0 - value) * 360;
+        return "hsl(" + h + ", 100%, 50%)";
+      }
+      console.log("zScoreMax: "+zScoreMax);
+      for(var i = 0; i<nodes.length; i++) {
+        // var color = heatMapColorforValue(zScore[i]/zScore[zScore.length-1]);
+        var color = heatMapColorforValue(zScore[i]);
+        nodes[i].style('background-color', color);
+      }
 
       cy.elements().unbind("mouseover");
       cy.elements().bind("mouseover", (event) => event.target.tippy.show());
@@ -120,6 +176,7 @@ dataset.addEventListener("change", (event) => {
       cy.elements().unbind("mouseout");
       cy.elements().bind("mouseout", (event) => event.target.tippy.hide());
 
+      
       cy.on("tap", "node", function (evt) {
         //동영상 태그 추가
         var node = evt.target;
@@ -133,8 +190,10 @@ dataset.addEventListener("change", (event) => {
         }
 
 
-        //그냥 배열 전체를 보냄    
-        showPopup(node._private.data.frameid);
+        //그냥 배열 전체를 보냄
+        if(node._private.data.frameid[0]){
+          showPopup(node._private.data.frameid);
+        }
       });
     });
 });

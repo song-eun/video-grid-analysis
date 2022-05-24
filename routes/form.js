@@ -142,11 +142,6 @@ router.post("/", function (req, res) {
             return parseFloat(i);
           });
 
-          console.log(str.length);
-          console.log(str);
-          console.log(score_str);
-          console.log(score_str.length);
-
           if (lines[i]["class_name"] == "person") {
             let list_x = [];
             let list_y = [];
@@ -253,8 +248,8 @@ router.post("/", function (req, res) {
           data_person_frame.push(frame_row);
         //}
       }
-      console.log(car_data.length);
-      console.log(data_car_frame.length);
+      // console.log(car_data.length);
+      // console.log(data_car_frame.length);
 
       for (let i = 0; i < car_count.length; i++) {
         let opacity = 0;
@@ -286,8 +281,6 @@ router.post("/", function (req, res) {
       fs.writeFileSync("./public/datasets/person.json", personJSON);
       fs.writeFileSync("./public/datasets/car.json", carJSON);
 
-
-      console.log(0.1<0.245);
       res.render("form", { x: x, y: y });
     });
 });
