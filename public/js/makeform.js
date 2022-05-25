@@ -112,23 +112,34 @@ dataset.addEventListener("change", (event) => {
       var nodes = cy.nodes().sort(function(a,b){
         return a.data('node_weight') - b.data('node_weight');
       });
-      var maxWeight = nodes[nodes.length-1].data('node_weight');
+      // var maxWeight = nodes[nodes.length-1].data('node_weight');
       // var nodeSlc = nodes.slice(8999,9999);
       // nodeSlc.style('background-color', '#E84855');
-      
+      var weightList = [];
+      for(var i = 0; i<nodes.length; i++)     
+      {
+        if(nodes[i].data('node_weight') > 0) {
+          weightList.push(nodes[i]);
+        }
+      }
+      console.log("weightList: ")
+      console.log(weightList);
       //표준편차구하기
       //1.평균구하기
       var avgWeight = 0;
-      for(var i = 0; i<nodes.length; i++) {
-        avgWeight += nodes[i].data('node_weight');        
+      var weightLength = 0;
+      for(var i = 0; i<weightList.length; i++) {        
+          avgWeight += weightList[i].data('node_weight');
+          weightLength++;
+        
       }
-      avgWeight = Math.floor(avgWeight/nodes.length);
+      avgWeight = Math.floor(avgWeight/weightLength);
       console.log("avgWeight: "+ avgWeight);
       
       //2.분산구하기
       var avgList = [];
-      for(var i = 0; i<nodes.length; i++) {
-        var num = nodes[i].data('node_weight') - avgWeight;
+      for(var i = 0; i<weightList.length; i++) {
+        var num = weightList[i].data('node_weight') - avgWeight;
         avgList.push(Math.abs(num*num));
       }
       console.log("avgList: ");
@@ -139,35 +150,40 @@ dataset.addEventListener("change", (event) => {
         sum += avgList[i]; 
       }
       console.log("sum: "+ sum);
-      var variance = Math.floor(sum/nodes.length-2);
+      var variance = sum/(weightLength-2);
       console.log("variance: "+ variance);
-      var standardDeviation = Math.sqrt(variance)
+      var standardDeviation = Math.sqrt(variance);
       console.log("standardDeviation: "+standardDeviation);
 
-      var whenZero = Math.abs((0 - avgWeight)/standardDeviation);
+      var whenZero = Math.abs((weightList[0].data('node_weight') - avgWeight)/standardDeviation);
       //z-score
       var zScore = [];
-      for(var i = 0; i<nodes.length; i++) {
-        zScore.push(((nodes[i].data('node_weight') - avgWeight)/standardDeviation)+whenZero);
-      }
-      var zScoreMax = zScore[zScore.length-1];
-      for(var i = 0; i<nodes.length; i++) {
-        zScore[i] = zScore[i]/zScoreMax;
+      for(var i = 0; i<weightList.length; i++) {
+        zScore.push(((weightList[i].data('node_weight') - avgWeight)/standardDeviation)+whenZero);
+        // zScore.push((weightList[i].data('node_weight') - avgWeight)/standardDeviation);
       }
       console.log("zScore: ");
       console.log(zScore);
+      var zScoreMax = zScore[zScore.length-1];
+      console.log("zScoreMax: "+ zScoreMax);
+      var zScoreMin = zScore[0];
+      console.log("zScoreMin: "+ zScoreMin);
+      var zScoreNormal = [];
+      for(var i = 0; i<zScore.length; i++) {
+        zScoreNormal.push((zScore[i]-zScoreMin) / (zScoreMax - zScoreMin));
+      }
+      console.log("zScoreNormal: ");
+      console.log(zScoreNormal);
 
       function heatMapColorforValue(value) {
-        var h = (1.0 - value) * 240;
-        // var h = (1.0 - value) * 100;
-        // var h = (1.0 - value) * 360;
+        var h = (1.0 - value) * 240
         return "hsl(" + h + ", 100%, 50%)";
       }
-      console.log("zScoreMax: "+zScoreMax);
-      for(var i = 0; i<nodes.length; i++) {
+      
+      for(var i = 0; i<zScoreNormal.length; i++) {
         // var color = heatMapColorforValue(zScore[i]/zScore[zScore.length-1]);
-        var color = heatMapColorforValue(zScore[i]);
-        nodes[i].style('background-color', color);
+          var color = heatMapColorforValue(zScoreNormal[i]);
+          weightList[i].style('background-color', color);
       }
 
       cy.elements().unbind("mouseover");
@@ -176,7 +192,6 @@ dataset.addEventListener("change", (event) => {
       cy.elements().unbind("mouseout");
       cy.elements().bind("mouseout", (event) => event.target.tippy.hide());
 
-      
       cy.on("tap", "node", function (evt) {
         //동영상 태그 추가
         var node = evt.target;
