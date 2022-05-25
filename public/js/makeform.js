@@ -108,7 +108,6 @@ dataset.addEventListener("change", (event) => {
         });
       });
 
-      //복사해서 하기
       var nodes = cy.nodes().sort(function(a,b){
         return a.data('node_weight') - b.data('node_weight');
       });
@@ -130,17 +129,15 @@ dataset.addEventListener("change", (event) => {
       var weightLength = 0;
       for(var i = 0; i<weightList.length; i++) {        
           avgWeight += weightList[i].data('node_weight');
-          weightLength++;
-        
       }
-      avgWeight = Math.floor(avgWeight/weightLength);
+      avgWeight = avgWeight/weightList.length;
       console.log("avgWeight: "+ avgWeight);
       
       //2.분산구하기
       var avgList = [];
       for(var i = 0; i<weightList.length; i++) {
         var num = weightList[i].data('node_weight') - avgWeight;
-        avgList.push(Math.abs(num*num));
+        avgList.push(num*num);
       }
       console.log("avgList: ");
       console.log(avgList);
@@ -150,39 +147,28 @@ dataset.addEventListener("change", (event) => {
         sum += avgList[i]; 
       }
       console.log("sum: "+ sum);
-      var variance = sum/(weightLength-2);
+      var variance = sum/(weightList.length-2);
       console.log("variance: "+ variance);
       var standardDeviation = Math.sqrt(variance);
       console.log("standardDeviation: "+standardDeviation);
 
       var whenZero = Math.abs((weightList[0].data('node_weight') - avgWeight)/standardDeviation);
-      //z-score
+      // //z-score
       var zScore = [];
       for(var i = 0; i<weightList.length; i++) {
         zScore.push(((weightList[i].data('node_weight') - avgWeight)/standardDeviation)+whenZero);
-        // zScore.push((weightList[i].data('node_weight') - avgWeight)/standardDeviation);
       }
       console.log("zScore: ");
       console.log(zScore);
-      var zScoreMax = zScore[zScore.length-1];
-      console.log("zScoreMax: "+ zScoreMax);
-      var zScoreMin = zScore[0];
-      console.log("zScoreMin: "+ zScoreMin);
-      var zScoreNormal = [];
-      for(var i = 0; i<zScore.length; i++) {
-        zScoreNormal.push((zScore[i]-zScoreMin) / (zScoreMax - zScoreMin));
-      }
-      console.log("zScoreNormal: ");
-      console.log(zScoreNormal);
 
       function heatMapColorforValue(value) {
-        var h = (1.0 - value) * 240
+        var h = (1.0 - value) * 240 
         return "hsl(" + h + ", 100%, 50%)";
       }
       
-      for(var i = 0; i<zScoreNormal.length; i++) {
+      for(var i = 0; i<zScore.length; i++) {
         // var color = heatMapColorforValue(zScore[i]/zScore[zScore.length-1]);
-          var color = heatMapColorforValue(zScoreNormal[i]);
+          var color = heatMapColorforValue(zScore[i]);
           weightList[i].style('background-color', color);
       }
 
