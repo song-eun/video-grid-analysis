@@ -6,11 +6,13 @@
   <script src="https://unpkg.com/popper.js@1.14.7/dist/umd/popper.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/cytoscape-popper@1.0.4/cytoscape-popper.min.js"></script>
   <script src="https://unpkg.com/tippy.js@4.0.1/umd/index.all.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
     integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
-    crossorigin="anonymous" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-
+    crossorigin="anonymous"
+  />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
 </head>
 <body>
   <div id="x" class="main"><%= x %></div>
@@ -24,19 +26,17 @@
   <div id="tab" class="hide"></div>
   <div id="popup" class="hide">
     <div class="content">
-      <video id="yourVideoplayer" width="820" height="580" preload="auto" muted="true"> 
+      <video id="yourVideoplayer" width="820" height="580" preload="auto" muted="true">
         <source src="/uploadedFiles/1645424764818__2e5d1e29-272a-3606-a480-183f0a69037d.mp4" type="video/mp4" />
       </video>
       <ul id="frame-list"></ul>
-      <button class="btn" onclick="closePopup()">
-        닫기
-      </button>
+      <button class="btn" onclick="closePopup()">닫기</button>
     </div>
   </div>
   <script>
     function closePopup() {
-      const popup = document.querySelector('#popup');
-      popup.classList.add('hide');
+      const popup = document.querySelector("#popup");
+      popup.classList.add("hide");
     }
   </script>
   <script type="module" src="/js/makeform.js"></script>
