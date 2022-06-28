@@ -1,5 +1,7 @@
 <head>
   <link href="/css/style.css" rel="stylesheet" />
+  <link href="https://unpkg.com/mvp.css" rel="stylesheet" />
+
   <!--<script src="/js/cytoscape.min.js"></script>
   <script src="/js/cytoscape-popper.js"></script>-->
   <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
@@ -27,7 +29,8 @@
   <div id="popup" class="hide">
     <div class="content">
       <video id="yourVideoplayer" width="820" height="580" preload="auto" muted="true">
-        <source src="/uploadedFiles/1645424764818__2e5d1e29-272a-3606-a480-183f0a69037d.mp4" type="video/mp4" />
+        <!-- <source src="/uploadedFiles/<%= %>.mp4 1645424764818__2e5d1e29-272a-3606-a480-183f0a69037d" type="video/mp4" /> -->
+        <source src="/uploadedFiles/<%= video %>.mp4" type="video/mp4" />
       </video>
       <ul id="frame-list"></ul>
       <button class="btn" onclick="closePopup()">닫기</button>

@@ -4,17 +4,22 @@ const parse = require("csv-parse");
 const { json } = require("express/lib/response");
 var router = express.Router();
 
-function makeDataForm(x,y) {
+function makeDataForm(x, y) {
   var width = 1920;
   var height = 1084;
   var xvalue = Math.round((width / x) * 100) / 100;
   var yvalue = Math.round((height / y) * 100) / 100;
-  var y1 = 0, y2 = 0, x1 = 0, x2 = 0, prex2 = 0, prey2 = 0;
+  var y1 = 0,
+    y2 = 0,
+    x1 = 0,
+    x2 = 0,
+    prex2 = 0,
+    prey2 = 0;
   var data_form = [];
   var x1_list = [];
   var x2_list = [];
   var y1_list = [];
-  var y2_list = []; 
+  var y2_list = [];
 
   for (let i = 0; i < y; i++) {
     y1 = 0;
@@ -90,9 +95,8 @@ router.post("/", function (req, res) {
     })
 
     .on("end", function () {
-
-      let car_data = makeDataForm(x,y);
-      let person_data = makeDataForm(x,y);
+      let car_data = makeDataForm(x, y);
+      let person_data = makeDataForm(x, y);
 
       let keys = csvData[0];
       for (let i = 0; i < csvData.length; i++) {
@@ -121,64 +125,62 @@ router.post("/", function (req, res) {
       //해당 되는 index json에 넣음
 
       for (let i = 1; i < lines.length; i++) {
-          let frameId = lines[i]["frame_id"];
-          let frame_str = frameId.replaceAll("[", "");
-          frame_str = frame_str.replaceAll("]", "");
-          frame_str = frame_str.split(", ").map(function (i) {
-            return parseInt(i, 10);
-          });
+        let frameId = lines[i]["frame_id"];
+        let frame_str = frameId.replaceAll("[", "");
+        frame_str = frame_str.replaceAll("]", "");
+        frame_str = frame_str.split(", ").map(function (i) {
+          return parseInt(i, 10);
+        });
 
-          let itraj = lines[i]["itraj"];
-          let str = itraj.replaceAll("[", "");
-          str = str.replaceAll("]", "");
-          str = str.split(", ").map(function (i) {
-            return parseInt(i, 10);
-          });
+        let itraj = lines[i]["itraj"];
+        let str = itraj.replaceAll("[", "");
+        str = str.replaceAll("]", "");
+        str = str.split(", ").map(function (i) {
+          return parseInt(i, 10);
+        });
 
-          let score = lines[i]["score"];
-          let score_str = score.replaceAll("[", "");
-          score_str = score_str.replaceAll("]", "");
-          score_str = score_str.split(", ").map(function (i) {
-            return parseFloat(i);
-          });
+        let score = lines[i]["score"];
+        let score_str = score.replaceAll("[", "");
+        score_str = score_str.replaceAll("]", "");
+        score_str = score_str.split(", ").map(function (i) {
+          return parseFloat(i);
+        });
 
-          if (lines[i]["class_name"] == "person") {
-            let list_x = [];
-            let list_y = [];
-            for(let j = 0; j < str.length; j++){
-              if(score_str[Math.floor(j/2)]>0.7){
-                if(j % 2 == 0) {
-                  list_x.push(str[j]);
-                }
-                else {
-                  list_y.push(str[j]);
-                }
-              }
-            }
-            person_x.push(list_x);
-            person_y.push(list_y);
-            person_list.push(str);
-            person_score.push(score_str);
-            fperson_list.push(frame_str);
-          } else {
-            let list_x = [];
-            let list_y = [];
-            for(let j = 0; j < str.length; j++){
-              if(j % 2 == 0) {
+        if (lines[i]["class_name"] == "person") {
+          let list_x = [];
+          let list_y = [];
+          for (let j = 0; j < str.length; j++) {
+            if (score_str[Math.floor(j / 2)] > 0.7) {
+              if (j % 2 == 0) {
                 list_x.push(str[j]);
-              }
-              else {
+              } else {
                 list_y.push(str[j]);
               }
             }
-            car_x.push(list_x);
-            car_y.push(list_y);
-            car_list.push(str);
-            car_score.push(score_str);
-            fcar_list.push(frame_str);
           }
+          person_x.push(list_x);
+          person_y.push(list_y);
+          person_list.push(str);
+          person_score.push(score_str);
+          fperson_list.push(frame_str);
+        } else {
+          let list_x = [];
+          let list_y = [];
+          for (let j = 0; j < str.length; j++) {
+            if (j % 2 == 0) {
+              list_x.push(str[j]);
+            } else {
+              list_y.push(str[j]);
+            }
+          }
+          car_x.push(list_x);
+          car_y.push(list_y);
+          car_list.push(str);
+          car_score.push(score_str);
+          fcar_list.push(frame_str);
+        }
       }
-      
+
       //console.log(person_x[0]);
       //console.log(car_x[1]);
       //console.log(person_list[0]);
@@ -207,19 +209,19 @@ router.post("/", function (req, res) {
               car_id_frame.push(fcar_list[j][k]);
             }
           }
-            if(car_id_frame.length != 0){
-              frame_row.push(car_id_frame);
+          if (car_id_frame.length != 0) {
+            frame_row.push(car_id_frame);
           }
         }
         cnt = Math.round(cnt * 100) / 100;
         car_count.push(cnt);
         //if(frame_row.length != 0) {
-          data_car_frame.push(frame_row);
+        data_car_frame.push(frame_row);
         //}
       }
 
       let data_person_frame = [];
-      
+
       //경계 조사
       for (let i = 0; i < person_data.length; i++) {
         let frame_row = [];
@@ -238,14 +240,14 @@ router.post("/", function (req, res) {
               person_id_frame.push(fperson_list[j][k]);
             }
           }
-          if(person_id_frame.length != 0){
+          if (person_id_frame.length != 0) {
             frame_row.push(person_id_frame);
           }
         }
         cnt = Math.round(cnt * 100) / 100;
         person_count.push(cnt);
         //if(frame_row.length !== 0) {
-          data_person_frame.push(frame_row);
+        data_person_frame.push(frame_row);
         //}
       }
       // console.log(car_data.length);
@@ -259,7 +261,7 @@ router.post("/", function (req, res) {
           id: i + 1,
           node_weight: car_count[i],
           opacity: opacity,
-          frameid: data_car_frame[i]
+          frameid: data_car_frame[i],
         };
       }
 
@@ -271,7 +273,7 @@ router.post("/", function (req, res) {
           id: i + 1,
           node_weight: person_count[i],
           opacity: opacity,
-          frameid: data_person_frame[i]
+          frameid: data_person_frame[i],
         };
       }
 
@@ -281,7 +283,7 @@ router.post("/", function (req, res) {
       fs.writeFileSync("./public/datasets/person.json", personJSON);
       fs.writeFileSync("./public/datasets/car.json", carJSON);
 
-      res.render("form", { x: x, y: y });
+      res.render("form", { x: x, y: y, video: radio });
     });
 });
 

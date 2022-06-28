@@ -5,6 +5,10 @@ body,
   height: 100%;
 }
 
+body {
+  background-color: #f6f9fc;
+}
+
 input {
   padding: 5px;
 }
@@ -18,45 +22,54 @@ input {
   transition: none !important;
 }
 
-.cc-selector input{
+.cc-selector input {
   margin: 0px;
   padding: 0px;
-  -webkit-appearance:none;
-     -moz-appearance:none;
-          appearance:none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
-.vid1{background-image:url(/image/2e5d1e29-272a-3606-a480-183f0a69037d.PNG);}
-.vid2{background-image:url(/image/5ee49c57-c438-382c-a4cc-d54ba988bc3c.PNG);}
-.vid3{background-image:url(/image/1d792fad-b0af-382e-8de9-d9310bad68bf_out_.PNG);}
+.vid1 {
+  background-image: url(/image/2e5d1e29-272a-3606-a480-183f0a69037d.PNG);
+}
+.vid2 {
+  background-image: url(/image/5ee49c57-c438-382c-a4cc-d54ba988bc3c.PNG);
+}
+.vid3 {
+  background-image: url(/image/4f280892-0b47-373a-95a9-094f109624e1.PNG);
+}
+.vid4 {
+  background-image: url(/image/f67483c4-c81b-3226-84c3-4107dd5d1416.PNG);
+}
 
-.drinkcard-cc{
-  cursor:pointer;
-  background-size:contain;
-  background-repeat:no-repeat;
-  display:inline-block;
-  height:190px;
-  width:337px;
+.drinkcard-cc {
+  cursor: pointer;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 190px;
+  width: 337px;
   -webkit-transition: all 100ms ease-in;
-     -moz-transition: all 100ms ease-in;
-          transition: all 100ms ease-in;
+  -moz-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
 }
 
-.drinkcard-cc:hover{
-  -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
-     -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
-          filter: brightness(1.2) grayscale(.5) opacity(.9);
+.drinkcard-cc:hover {
+  -webkit-filter: brightness(1.2) grayscale(0.5) opacity(0.9);
+  -moz-filter: brightness(1.2) grayscale(0.5) opacity(0.9);
+  filter: brightness(1.2) grayscale(0.5) opacity(0.9);
 }
 
-[type=radio] { 
+[type="radio"] {
   position: absolute;
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-[type=radio]:checked + label  {
-  outline: 4px solid #6d95ec ;
+[type="radio"]:checked + label {
+  outline: 4px solid #6d95ec;
 }
 
 #popup {
@@ -68,7 +81,7 @@ input {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, .7);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 1;
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
@@ -84,13 +97,13 @@ input {
 }
 
 #popup .content {
-  padding: 0px 160px 80px 60px; 
+  padding: 0px 160px 80px 60px;
   /*top right down left*/
   background: #fff;
   border-radius: 5px;
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .btn {
-  margin:10px 0px 0px 580px;
+  margin: 10px 0px 0px 580px;
 }
